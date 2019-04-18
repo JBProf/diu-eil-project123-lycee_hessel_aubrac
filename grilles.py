@@ -18,6 +18,16 @@ grille_fausse=np.array([4,8,3,9,5,7,6,1,2,7,5,6,1,2,8,4,9,3,1,9,2,4,3,6,5,7,8,2,
 grille_fausse=grille_fausse.reshape(9,9)
 
 
+def afficher_une_grille(grille):
+    for k in range(9):
+        for i in range(9):
+            if grille[k][i] != 0:
+                print(grille[k][i], end=" ")
+            else:
+                print("-", end=" ")
+        print()
+afficher_une_grille(grille_fausse)
+
 def verification_ligne_grille(grille): 
     dico_verificateur={1:1,2:1,3:1,4:1,5:1,6:1,7:1,8:1,9:1}
     for k in range(9):
@@ -46,8 +56,6 @@ def verification_colonne_grille(grille):
             return False
     return True
 
-
-
 def verification_carre_grille(grille):
     dico_verificateur = {1: 1, 2: 1, 3: 1, 4: 1, 5: 1, 6: 1, 7: 1, 8: 1, 9: 1}
     for j in range(3):
@@ -70,4 +78,4 @@ def grille_is_correct(grille):
     else :
         return False
 
-print(grille_is_correct(grille_pleine_2))
+#print(grille_is_correct(grille_pleine_2))
