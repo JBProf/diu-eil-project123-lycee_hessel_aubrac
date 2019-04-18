@@ -14,7 +14,11 @@ grille_pleine_2=np.array([4,1,5,6,3,8,9,7,2,3,6,2,4,7,9,1,8,5,7,8,9,2,1,5,3,6,4,
 grille_pleine_2=grille_pleine_2.reshape(9,9)
 #print(grille_pleine_2)
 
-#print(grille_pleine_2[1][3])
+grille_fausse=np.array([4,8,3,9,5,7,6,1,2,7,5,6,1,2,8,4,9,3,1,9,2,4,3,6,5,7,8,2,3,1,5,6,4,7,8,9,5,7,4,8,1,9,2,3,6,8,6,9,2,7,3,1,4,5,6,4,7,3,8,2,9,5,1,9,1,8,6,4,5,3,2,3,3,2,5,7,9,1,8,6,4])
+grille_fausse=grille_fausse.reshape(9,9)
+
+
+print(grille_fausse)
 
 
 def verification_ligne_grille(grille): 
@@ -45,21 +49,23 @@ def verification_colonne_grille(grille):
             return False
     return True
 
-print(verification_colonne_grille(grille_pleine_1))
+
 
 def verification_carre_grille(grille):
     dico_verificateur = {1: 1, 2: 1, 3: 1, 4: 1, 5: 1, 6: 1, 7: 1, 8: 1, 9: 1}
-    for k in range(9):
-        a={}
-        grille_bis=np.copy(grille)
-        grille_bis=np.reshape(grille_bis,81)
-        for i in range(9):
-            if grille_bis[9*k+i] in a.keys():
-                a[grille_bis[9*k+i]]+=1
-            else:
-                a[grille_bis[9 * k + i]] = 1
-        if a != dico_verificateur:
-                return False
-        return True
+    for j in range(3):
+        for i in range(3):
+            a={}
+            for k in range(3):
+                for h in range(3):
+                    if grille[3*i+k][3*j+h] in a.keys():
+                        a[grille[3*i+k][3*j+h]]+=1
+                    else:
+                        a[grille[3*i+k][3*j+h]] = 1
+            if a != dico_verificateur:
+                    return False
+    return True
 
-print(verification_carre_grille(grille_pleine_1))
+print(verification_carre_grille(grille_pleine_2))
+print(verification_colonne_grille(grille_pleine_2))
+print(verification_ligne_grille(grille_pleine_2))
