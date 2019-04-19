@@ -8,7 +8,7 @@ def grille_zero(grille):
 #les deux grilles suivantes sont complètes et correctes
 grille_pleine_1=np.array([5,3,4,6,7,8,9,1,2,6,7,2,1,9,5,3,4,8,1,9,8,3,4,2,5,6,7,8,5,9,7,6,1,4,2,3,4,2,6,8,5,3,7,9,1,7,1,3,9,2,4,8,5,6,9,6,1,5,3,7,2,8,4,2,8,7,4,1,9,6,3,5,3,4,5,2,8,6,1,7,9])
 grille_pleine_1=grille_pleine_1.reshape(9,9)
-#print(grille_pleine_1)
+print(grille_pleine_1)
 
 grille_pleine_2=np.array([4,1,5,6,3,8,9,7,2,3,6,2,4,7,9,1,8,5,7,8,9,2,1,5,3,6,4,9,2,6,3,4,1,7,5,8,1,3,8,7,5,6,4,2,9,5,7,4,9,8,2,6,3,1,2,5,7,1,6,4,8,9,3,8,4,3,5,9,7,2,1,6,6,9,1,8,2,3,5,4,7])
 grille_pleine_2=grille_pleine_2.reshape(9,9)
@@ -24,7 +24,7 @@ def afficher_une_grille(grille):
             if grille[k][i] != 0:
                 print(grille[k][i], end=" ")
             else:
-                print("-", end=" ")
+                print("-", end=" ") # remplace les zéros par des tirets si les zéros représentent les nombres manquants
         print()
 afficher_une_grille(grille_fausse)
 
@@ -79,3 +79,29 @@ def grille_is_correct(grille):
         return False
 
 #print(grille_is_correct(grille_pleine_2))
+
+# on considère que les chiffres manquants ou enlevés seront représentés par des zéros
+
+def chiffres_lignes(i,grille): # cette fonction renvoie une liste avec tous les chiffres présents sur la ligne i hors zéro
+    ligne=[]
+    for k in range(9):
+        if grille[i][k]!=0:
+            ligne=ligne +grille[i][k]
+    return ligne
+
+def chiffres_colonnes(j,grille):# cette fonction renvoie une liste avec tous les chiffres présents sur la colonne j hors zéro
+    colonne=[]
+    for k in range(9):
+        if grille[k][j]!=0:
+            colonne=colonne +grille[k][j]
+    return colonne
+
+def chiffres_carré(i,j,grille):# cette fonction renvoie une liste avec tous les chiffres présents sur la colonne j hors zéro
+    a=3*(i//3)
+    b=3*(j//3) # (a,b) représente les coordonnées du coin supérieur gauche du carré
+    carré=[]
+    for k in range(3):
+        for j in range(3):
+            if grille[a+k][b+j]!=0:
+                carré = carré+ grille[a+k][b+j]
+    return carré
