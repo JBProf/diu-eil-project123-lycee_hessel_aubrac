@@ -81,7 +81,7 @@ def afficher_une_grille(grille):
                 print("-", end=" ") # remplace les zéros par des tirets si les zéros représentent les nombres manquants
         print()
 
-afficher_une_grille(grille_1)
+afficher_une_grille(grille_incomplète)
 
 def verification_ligne_grille(grille): 
     dico_verificateur={1:1,2:1,3:1,4:1,5:1,6:1,7:1,8:1,9:1}
@@ -133,7 +133,7 @@ def grille_is_correct(grille):
     else :
         return False
 
-print(grille_is_correct(grille_1))
+#print(grille_is_correct(grille_1))
 
 # on considère que les chiffres manquants ou enlevés seront représentés par des zéros
 
@@ -147,13 +147,13 @@ def chiffres_lignes(i,grille): # cette fonction renvoie une liste avec tous les 
 def chiffres_colonnes(j,grille):# cette fonction renvoie une liste avec tous les chiffres présents sur la colonne j hors zéro
     colonne=[]
     for k in range(9):
-        if grille[k][j]!=0:
+        if grille[k][j]!= 0:
             colonne=colonne +[grille[k][j]]
     return colonne
 
 def chiffres_carré(i,j,grille):# cette fonction renvoie une liste avec tous les chiffres présents sur la colonne j hors zéro
-    a=3*(i//3)
-    b=3*(j//3) # (a,b) représente les coordonnées du coin supérieur gauche du carré
+    a = 3*(i//3)
+    b = 3*(j//3) # (a,b) représente les coordonnées du coin supérieur gauche du carré
     carré=[]
     for k in range(3):
         for h in range(3):
@@ -161,18 +161,97 @@ def chiffres_carré(i,j,grille):# cette fonction renvoie une liste avec tous les
                 carré = carré+ [grille[a+k][b+h]]
     return carré
 
-print(chiffres_carré(3,4,grille_1))
+#print(chiffres_carré(3,4,grille_1))
 
-def possibilites_de_la_case(k,grille): # pour chaque case 0<=k<=80, on renvoie les chiffres possibles
-    i,j=numero_vers_case(k)
-    if grille[i][j]!=0: # si la case comporte un numéro, on le garde
+def possibilites_de_la_case(k,grille): # pour chaque case 0<=k<=80 d'une grille, on renvoie les chiffres possibles
+    i,j = numero_vers_case(k)
+    if grille[i][j] != 0: # si la case comporte un numéro, on le garde
         return [grille[i][j]]
 
-
-    #chiffres_présdents est une liste qui renvoi tous les chiffres dans la meme ligne, la meme colonne et le même bloc que la case k
+    #chiffres_présents est une liste qui renvoi tous les chiffres dans la meme ligne, la meme colonne et le même carré que la case k
     chiffres_presents= chiffres_lignes(i,grille)+chiffres_colonnes(j,grille)+chiffres_carré(i,j,grille)
 
     chiffres_possibles=[i for i in range(1,10) if i not in chiffres_presents]
     return chiffres_possibles  #peut renvoyer une liste vide s'il n'y a pas de possibilités
 
-print(possibilites_de_la_case(3,grille_incomplète))
+
+
+# les fonctions suivantes ont pour but de déterminer par force brute toutes les possibilités de grille connaissant les chriffres du début
+
+
+# pour chaque case 0<=k<=80 d'une grille, on renvoie les chiffres possibles en tenant compte
+#des choix faits dans les cases précédentes
+
+possibilites=[] #renvoie une liste contenant toutes les possibilités case par case
+
+
+
+
+def derniere_valeur(): #on choisit la dernière valeur obtenue par la fonction possibilites_de_la_case()
+    return [possibilites[k][-1] for k in range(len(possibilites))]
+#print(derniere_valeur())
+
+def possibilites_case(k,grille):
+    i,j = numero_vers_case(k)
+    if grille[i][j] != 0: # si la case comporte un numéro, on le garde
+        return [grille[i][j]]
+    valeur=derniere_valeur() #renvoie une liste des "derniers" chiffres possibles
+    grille_essai=liste_vers_grille(valeur) #renvoie une grille contenant une combinaison possible
+    for i in range(9):
+        for j in range(9):
+            if grille[i][j]!=0: # on rajoute dans notre grille essai les valeurs de la grille de départ
+                grille_essai[i][j]=grille[i][j]
+
+    #chiffres_présents est une liste qui renvoie tous les chiffres dans la même ligne, la meme colonne et le même carré que la case k
+    chiffres_presents= chiffres_lignes(i,grille)+chiffres_colonnes(j,grille)+chiffres_carré(i,j,grille)
+
+    chiffres_possibles=[i for i in range(1,10) if i not in chiffres_presents]
+    return chiffres_possibles  #peut renvoyer une liste vide s'il n'y a pas de possibilités
+
+
+
+
+def retour():#si jamais le choix conduit à une impasse
+    global possibilites
+    r =len(possibilites)-1   # avant dernière case
+    while r>=0 and len(possibilites[r])==1:  #si il n'y a qu'une possibilité pour l'avant dernière case
+        del possibilites[-1]
+        r = r - 1
+    if r >= 0:
+        k = len(possibilites[r])
+        possibilites[r]=possibilites[r][0:k-1]
+    return
+
+def combinaisons_correctes(grille):
+    global possibilites
+    possibilites=[]
+    possibilites=[possibilites_de_la_case(0,grille)]
+    termine = False
+    while not termine:
+        r = len(possibilites)
+        print(possibilites)
+        if r ==0: #plus de possibilités
+            termine= True
+        if 0<r<81:
+            autre_combinaison=possibilites_de_la_case(r,grille)
+            if len(autre_combinaison)!=0:
+                possibilites=possibilites+[autre_combinaison]
+            else:
+                retour()
+        if r ==81: # on a une solution
+            print("solution:",derniere_valeur())
+            retour()
+            termine=True
+    return derniere_valeur()
+
+
+
+liste_solution=combinaisons_correctes(grille_incomplète)
+grille_solution=liste_vers_grille(liste_solution)
+afficher_une_grille(grille_solution)
+
+
+
+
+
+
