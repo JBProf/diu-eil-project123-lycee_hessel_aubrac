@@ -81,7 +81,7 @@ def afficher_une_grille(grille):
                 print("-", end=" ") # remplace les zéros par des tirets si les zéros représentent les nombres manquants
         print()
 
-afficher_une_grille(grille_incomplète)
+#afficher_une_grille(grille_incomplète)
 
 def verification_ligne_grille(grille): 
     dico_verificateur={1:1,2:1,3:1,4:1,5:1,6:1,7:1,8:1,9:1}
@@ -158,7 +158,7 @@ def chiffres_carré(i,j,grille):# cette fonction renvoie une liste avec tous les
     for k in range(3):
         for h in range(3):
             if grille[a+k][b+h]!=0:
-                carré = carré+ [grille[a+k][b+h]]
+                carré = carré + [grille[a+k][b+h]]
     return carré
 
 #print(chiffres_carré(3,4,grille_1))
@@ -188,7 +188,7 @@ possibilites=[] #renvoie une liste contenant toutes les possibilités case par c
 
 
 def derniere_valeur(): #on choisit la dernière valeur obtenue par la fonction possibilites_de_la_case()
-    return [possibilites[k][-1] for k in range(len(possibilites))]
+    return [possibilite[-1] for possibilite in possibilites]
 #print(derniere_valeur())
 
 def possibilites_case(k,grille):
@@ -196,6 +196,7 @@ def possibilites_case(k,grille):
     if grille[i][j] != 0: # si la case comporte un numéro, on le garde
         return [grille[i][j]]
     valeur=derniere_valeur() #renvoie une liste des "derniers" chiffres possibles
+    print(valeur)
     grille_essai=liste_vers_grille(valeur) #renvoie une grille contenant une combinaison possible
     for i in range(9):
         for j in range(9):
@@ -203,7 +204,7 @@ def possibilites_case(k,grille):
                 grille_essai[i][j]=grille[i][j]
 
     #chiffres_présents est une liste qui renvoie tous les chiffres dans la même ligne, la meme colonne et le même carré que la case k
-    chiffres_presents= chiffres_lignes(i,grille)+chiffres_colonnes(j,grille)+chiffres_carré(i,j,grille)
+    chiffres_presents = chiffres_lignes(i,grille) + chiffres_colonnes(j,grille) + chiffres_carré(i,j,grille)
 
     chiffres_possibles=[i for i in range(1,10) if i not in chiffres_presents]
     return chiffres_possibles  #peut renvoyer une liste vide s'il n'y a pas de possibilités
@@ -215,7 +216,7 @@ def retour():#si jamais le choix conduit à une impasse
     global possibilites
     r =len(possibilites)-1   # avant dernière case
     while r>=0 and len(possibilites[r])==1:  #si il n'y a qu'une possibilité pour l'avant dernière case
-        del possibilites[-1]
+        possibilites=possibilites[0:r]
         r = r - 1
     if r >= 0:
         k = len(possibilites[r])
@@ -229,7 +230,7 @@ def combinaisons_correctes(grille):
     termine = False
     while not termine:
         r = len(possibilites)
-        print(possibilites)
+        #print(possibilites)
         if r ==0: #plus de possibilités
             termine= True
         if 0<r<81:
@@ -240,18 +241,37 @@ def combinaisons_correctes(grille):
                 retour()
         if r ==81: # on a une solution
             print("solution:",derniere_valeur())
-            retour()
+            #retour() #essaye de trouver une autre grille solution
             termine=True
     return derniere_valeur()
 
 
 
-liste_solution=combinaisons_correctes(grille_incomplète)
-grille_solution=liste_vers_grille(liste_solution)
-afficher_une_grille(grille_solution)
+#liste_solution=combinaisons_correctes(grille_incomplète)
 
+#grille_solution=liste_vers_grille(liste_solution)
+#print(grille_solution)
+#afficher_une_grille(grille_solution)
 
+liste_incomplète_2=[0,9,4, 0,0,0, 0,0,0,
+                    5,0,2, 0,0,0, 0,0,0,
+                    1,0,7, 0,5,0, 0,2,8,
+                    4,0,9, 0,0,3, 0,0,0,
+                    0,0,3, 8,0,5, 1,0,0,
+                    0,0,0, 9,0,0, 7,0,3,
+                    6,2,0, 0,1,0, 3,0,5,
+                    0,0,0, 0,0,0, 2,0,1,
+                    0,0,0, 0,0,0, 8,7,0]
 
+grille_incomplète_2=liste_vers_grille(liste_incomplète_2)
+afficher_une_grille(grille_incomplète_2)
 
+liste_solution_2=combinaisons_correctes(grille_incomplète_2)
+
+grille_solution_2=liste_vers_grille(liste_solution_2)
+
+afficher_une_grille(grille_solution_2)
+
+print(possibilites_de_la_case(7,grille_incomplète_2))
 
 
